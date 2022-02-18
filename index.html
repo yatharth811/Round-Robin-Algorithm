@@ -71,7 +71,7 @@
       Round Robin Algorithm
     </h1>
 
-   <div class="grid">
+    <div class="grid">
       <form name="calcf" id="input-form">
         <table>
           <tr>
@@ -166,6 +166,7 @@
         <button type="submit">Submit</button>
 
         <table id="allocation-table" style="margin-top: 1rem"></table>
+        <table id="allocation-table2" style="margin-top: 1rem"></table>
       </form>
 
       <div id="graph-container" style="padding-right: 0.5rem">
@@ -295,24 +296,23 @@
           }
         }
 
-
         generateStates();
         console.log(states);
 
         allocationTable.innerHTML = "";
 
         showTable(0, true);
+        showTable2(0, true);
 
         started = false;
-
 
         // form.hidden = true;
         let inputs = document.getElementsByTagName("input");
         for (let input of inputs) input.disabled = true;
-
       });
 
       const allocationTable = document.getElementById("allocation-table");
+      const allocationTable2 = document.getElementById("allocation-table2");
 
       const startAnimationButton = document.getElementById(
         "startAnimationButton"
@@ -329,7 +329,6 @@
       pauseResumeButton.addEventListener("click", pauseResumeAnimation);
 
       const statusDiv = document.getElementById("status-text");
-
 
       const sleep = (ms) => {
         return new Promise((resolve) => setTimeout(resolve, ms));
@@ -366,8 +365,50 @@
         allocationTable.innerHTML = tableData;
       };
 
-      const loadAnimation = async (states) => {
+      const showTable2 = (stepIndex, showDummyTable) => {
+        const allocation = states[stepIndex];
 
+        let tableData = "";
+
+        let goodsToShow = Array.from(Array(m)).map((i) => 1);
+        for (let i = 0; i < n; i++) {
+          for (let j = 0; j < m; j++) {
+            if (allocation[i].includes(j)) goodsToShow[j] = 0;
+          }
+        }
+
+        tableData += "<tr><td></td>";
+        for (let i = 0; i < m; i++) {
+          if (goodsToShow[i] || showDummyTable)
+            tableData += `
+            <td class="header"><div class="red-circle" style="font-size:1rem;">g${
+              i + 1
+            }</div></td>
+          `;
+          else tableData += `<td class="header"></td>`;
+        }
+        tableData += "</tr>";
+
+        for (let i = 0; i < n; i++) {
+          tableData += `<tr><td class="header">a${i + 1}</td>`;
+
+          if (!showDummyTable) {
+            for (let j = 0; j < m; j++) {
+              const showRedCircle = allocation[i].includes(j);
+              if (showRedCircle)
+                tableData += `<td class="value"><div ${
+                  showRedCircle ? `class="red-circle"` : ""
+                }>g${j + 1}</div></td>`;
+            }
+          }
+
+          tableData += "</tr>";
+        }
+
+        allocationTable2.innerHTML = tableData;
+      };
+
+      const loadAnimation = async (states) => {
         while (!started) await sleep(100);
 
         let timeGap = 4; // in seconds
@@ -383,6 +424,7 @@
           statusDiv.innerHTML = `Step ${i + 1}.`;
 
           showTable(i);
+          showTable2(i);
 
           let timeGap = 4; // in seconds
           for (let k = 0; k < timeGap; k++) {

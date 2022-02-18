@@ -5,8 +5,10 @@ function generateStates() {
   console.log("n:", n, "m:", m);
   console.log(typeof n);
 
+  // n aur m mein khi exchange krke toh nhi likh diya? ek baar dekhio
+
   allocation = Array.from(Array(n)).map((i) => []);
-  hash = Array.from(Array(n)).map((i) => 0);
+  hash = Array.from(Array(m)).map((i) => 0);
 
   t = 0;
 
@@ -25,30 +27,8 @@ function generateStates() {
     // console.log()
     // console.log("allocation:",  allocation);
     states.push(allocation.map(arr => arr.slice()));
+
+    console.log(states);
   }
 
 }
-
-// for (let i = 0; i < m; i++) {
-  
-
-//   console.log("allocation:", allocation);
-//   console.log("src:", src);
-
-
-//   states.push(allocation.map(arr => arr.slice()));
-
-// }
-
-//   for (let i = 0; i < allocation.length; i++) {
-//     // process.stdout.write(`a_{${i + 1}} -> `);
-//     for (let y of allocation[i]) {
-//       // process.stdout.write(`g_{${y + 1}} `);
-//     }
-//     // process.stdout.write("\n");
-//   }
-
-
-// generateStates();
-// console.log(states);
-// console.log(toEdges(states[4]));
